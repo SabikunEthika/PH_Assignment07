@@ -1,0 +1,3 @@
+'use client'; import {createContext,useContext,useEffect,useState} from 'react';
+type User={name:string;email:string}; const C=createContext<{user:User|null;login:(u:User)=>void;logout:()=>void}>({user:null,login:()=>{},logout:()=>{}});
+export function AuthProvider({children}:{children:React.ReactNode}){const [user,setUser]=useState<User|null>(null);useEffect(()=>{const u=localStorage.getItem('bd-user');if(u)setUser(JSON.parse(u))},[]);const login=(u:User)=>{localStorage.setItem('bd-user',JSON.stringify(u));setUser(u)};const logout=()=>{localStorage.removeItem('bd-user');setUser(null)};return <C.Provider value={{user,login,logout}}>{children}</C.Provider>}; export const useAuth=()=>useContext(C);
