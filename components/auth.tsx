@@ -1,3 +1,14 @@
-'use client'; import {createContext,useContext,useEffect,useState} from 'react';
-type User={name:string;email:string}; const C=createContext<{user:User|null;login:(u:User)=>void;logout:()=>void}>({user:null,login:()=>{},logout:()=>{}});
-export function AuthProvider({children}:{children:React.ReactNode}){const [user,setUser]=useState<User|null>(null);useEffect(()=>{const u=localStorage.getItem('bd-user');if(u)setUser(JSON.parse(u))},[]);const login=(u:User)=>{localStorage.setItem('bd-user',JSON.stringify(u));setUser(u)};const logout=()=>{localStorage.removeItem('bd-user');setUser(null)};return <C.Provider value={{user,login,logout}}>{children}</C.Provider>}; export const useAuth=()=>useContext(C);
+'use client';
+import { createContext, useContext } from 'react';
+import { authClient } from '@/lib/auth-client';
+
+type User = { name: string; email: string };
+type AuthState = { user: User | null; loading: boolean; logout: () => Promise<void> };
+const C = createContext<AuthState>({ user: null, loading: true, logout: async () => {} });
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { data, isPending } = authClient.useSession();
+  const logout = async () => { await authClient.signOut(); };
+  return <C.Provider value={{ user: data?.user ?? null, loading: isPending, logout }}>{children}</C.Provider>;
+}
+export const useAuth = () => useContext(C);
