@@ -20,11 +20,17 @@ export function Header() {
   const path = usePathname(),
     { user, logout } = useAuth(),
     r = useRouter();
-  const date = new Intl.DateTimeFormat("bn-BD", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
+  const [date, setDate] = useState("");
+  useEffect(() => {
+    setDate(
+      new Intl.DateTimeFormat("bn-BD", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "Asia/Dhaka",
+      }).format(new Date()),
+    );
+  }, []);
   const out = () => {
     logout();
     toast.success("সফলভাবে সাইন আউট করা হয়েছে");
@@ -47,7 +53,9 @@ export function Header() {
               </span>
               <span>বাজার দর</span>
             </div>
-            <div className="text-xs text-slate-500">আজ, {date}</div>
+            <div className="text-xs text-slate-500">
+              {date ? `আজ, ${date}` : "আজ"}
+            </div>
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
             {cats.map(([s, n]) => (
