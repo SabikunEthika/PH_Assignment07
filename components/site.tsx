@@ -7,14 +7,14 @@ import { fallback, Product, bn, unit, API } from "@/lib/products";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 const cats = [
-  ["chal", "চাল"],
-  ["dal", "ডাল"],
-  ["tel", "তেল"],
-  ["sobji", "সবজি"],
-  ["mach", "মাছ"],
-  ["mangsho", "মাংস"],
-  ["dim", "ডিম"],
-  ["mosla", "মসলা"],
+  ["chal", "চাল", "🍚"],
+  ["dal", "ডাল", "🫘"],
+  ["tel", "তেল", "🫙"],
+  ["sobji", "সবজি", "🥔"],
+  ["mach", "মাছ", "🐟"],
+  ["mangsho", "মাংস", "🍗"],
+  ["dim", "ডিম", "🥚"],
+  ["mosla", "মসলা", "🧄"],
 ];
 export function Header() {
   const path = usePathname(),
@@ -57,17 +57,6 @@ export function Header() {
               {date ? `আজ, ${date}` : "আজ"}
             </div>
           </Link>
-          <nav className="hidden items-center gap-1 md:flex">
-            {cats.map(([s, n]) => (
-              <Link
-                className={`rounded-full px-3 py-1.5 text-sm font-semibold ${path === "/category/" + s ? "bg-[#dff3e7] text-[#17643c]" : "text-slate-600 hover:bg-slate-50"}`}
-                href={"/category/" + s}
-                key={s}
-              >
-                {n}
-              </Link>
-            ))}
-          </nav>
           <div className="flex items-center gap-2 text-sm font-semibold">
             {user ? (
               <>
@@ -98,6 +87,23 @@ export function Header() {
               </>
             )}
           </div>
+        </div>
+        <div className="border-t border-slate-100 bg-[#f0f8f2]">
+          <nav
+            className="container flex min-h-14 items-center gap-2 overflow-x-auto py-2"
+            aria-label="ক্যাটাগরি"
+          >
+            {cats.map(([s, n, icon]) => (
+              <Link
+                className={`flex shrink-0 items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold ${path === "/category/" + s ? "bg-[#dff3e7] text-[#17643c]" : "text-slate-600 hover:bg-white"}`}
+                href={"/category/" + s}
+                key={s}
+              >
+                <span aria-hidden="true">{icon}</span>
+                {n}
+              </Link>
+            ))}
+          </nav>
         </div>
         <div className="overflow-hidden border-t border-slate-100 bg-[#f0f8f2]">
           <div className="ticker-track flex gap-8 py-2 text-sm text-slate-700">
