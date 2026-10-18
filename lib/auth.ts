@@ -18,6 +18,12 @@ const vercelOrigins = [
 export const auth = betterAuth({
   database: mongodbAdapter(database, { client }),
   emailAndPassword: { enabled: true, autoSignIn: true },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    },
+  },
   trustedOrigins: [
     "http://localhost:3000",
     "http://localhost:*",
