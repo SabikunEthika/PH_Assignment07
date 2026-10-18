@@ -44,7 +44,11 @@ export default function Product() {
       </>
     );
   const min = Math.min(...p.markets.map((x) => x.min)),
-    max = Math.max(...p.markets.map((x) => x.max));
+    max = Math.max(...p.markets.map((x) => x.max)),
+    priceChange = p.today - p.yesterday,
+    priceChangeAmount = Math.abs(priceChange),
+    priceChangeDirection = priceChange >= 0 ? "বেড়েছে" : "কমেছে",
+    priceChangeArrow = priceChange >= 0 ? "▲" : "▼";
   return (
     <>
       <Header />
@@ -61,7 +65,10 @@ export default function Product() {
                 </p>
                 <h1 className="text-3xl font-bold">{p.nameBn}</h1>
                 <p className="text-slate-600">
-                  দেশের বিভিন্ন বাজারের আজকের গড় মূল্য
+                  গতকালের তুলনায় আজ দাম {priceChangeDirection} {bn(priceChangeAmount)} টাকা।
+                </p>
+                <p className="mt-1 font-semibold text-[#17643c]">
+                  {priceChangeArrow} আজকের দাম - {bn(priceChangeAmount)} টাকা
                 </p>
               </div>
             </div>
@@ -80,22 +87,26 @@ export default function Product() {
           <p className="mb-5 text-slate-500">
             বিভিন্ন বাজারে পণ্যটির সর্বনিম্ন ও সর্বোচ্চ মূল্য
           </p>
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-            <table className="w-full text-left">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table className="w-full min-w-[640px] border-collapse text-left text-black">
               <thead className="bg-slate-50 text-sm text-slate-500">
                 <tr>
-                  <th className="p-4">বাজার</th>
-                  <th className="p-4">বিভাগ</th>
-                  <th className="p-4 text-right">দামের সীমা</th>
+                  <th className="border border-slate-200 p-4">বাজার</th>
+                  <th className="border border-slate-200 p-4">বিভাগ</th>
+                  <th className="border border-slate-200 p-4 text-right">সর্বনিম্ন</th>
+                  <th className="border border-slate-200 p-4 text-right">সর্বাধিক</th>
+                  <th className="border border-slate-200 p-4 text-right">গড়</th>
                 </tr>
               </thead>
               <tbody>
                 {p.markets.map((m, i) => (
-                  <tr key={i} className="border-t border-slate-100">
-                    <td className="p-4 font-semibold">{m.market}</td>
-                    <td className="p-4 text-slate-500">{m.division}</td>
-                    <td className="p-4 text-right font-bold text-[#17643c]">
-                      {bn(m.min)} – {bn(m.max)} টাকা
+                  <tr key={i}>
+                    <td className="border border-slate-200 p-4 font-semibold">{m.market}</td>
+                    <td className="border border-slate-200 p-4">{m.division}</td>
+                    <td className="border border-slate-200 p-4 text-right">{bn(m.min)} টাকা</td>
+                    <td className="border border-slate-200 p-4 text-right">{bn(m.max)} টাকা</td>
+                    <td className="border border-slate-200 p-4 text-right">
+                      {bn((m.min + m.max) / 2)} টাকা
                     </td>
                   </tr>
                 ))}
